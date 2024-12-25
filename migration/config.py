@@ -1,0 +1,8 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SUPABASE_URL = "https://pulqhwvcwjguhdtpogpy.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1bHFod3Zjd2pndWhkdHBvZ3B5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxMDE5NjUsImV4cCI6MjA1MDY3Nzk2NX0.My0BXB41Vw7btI0eOEqx8FZZbP4y4hJtwyl3RRlrISA"
+BATCH_SIZE = 1000

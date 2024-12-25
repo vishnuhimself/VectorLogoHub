@@ -1,0 +1,3 @@
+python-dotenv
+supabase
+tqdm    # for progress bars
