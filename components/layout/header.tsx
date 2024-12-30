@@ -18,10 +18,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: '/' as Route, label: 'Home' },
   { href: '/alphabet/A' as Route, label: 'Browse by Letter' },
-  { href: '/about' as Route, label: 'About' },
-  { href: '/contact' as Route, label: 'Contact' },
 ]
 
 export function Header() {

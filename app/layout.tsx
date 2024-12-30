@@ -14,7 +14,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 
 export const metadata: Metadata = {
   title: {
-    default: 'VectorLogoHub - Brand Logos. Unlimited Free Downloads.',
+    default: 'VectorLogoHub - Download Vector Logos. Free. Unlimited.',
     template: '%s | VectorLogoHub'
   },
   description: 'VectorLogoHub is the largest collection of free vector logos. Works with AI, PSD, EPS, and Adobe PDF formats. Unlimited free downloads. No signup required.',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     canonical: 'https://vectorlogohub.com',
   },
   openGraph: {
-    title: 'VectorLogoHub - Brand Logos. Unlimited Free Downloads.',
+    title: 'VectorLogoHub - Download Vector Logos. Free. Unlimited.',
     description: 'VectorLogoHub is the largest collection of free vector logos. Works with AI, PSD, EPS, and Adobe PDF formats. Unlimited free downloads. No signup required.',
     url: 'https://vectorlogohub.com',
     siteName: 'VectorLogoHub',

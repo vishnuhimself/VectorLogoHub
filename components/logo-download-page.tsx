@@ -25,15 +25,17 @@ function extractLogoName(title: string): string {
     .replace(/ vector \(SVG\) logo$/, '')
 }
 
+interface LogoDownloadPageProps {
+  logo: LogoData
+  relatedLogos: LogoData[]
+  randomLogos: LogoData[]
+}
+
 export default function LogoDownloadPage({ 
   logo, 
-  allLogos,
+  relatedLogos,
   randomLogos 
-}: { 
-  logo: LogoData
-  allLogos: LogoData[]
-  randomLogos: LogoData[]
-}) {
+}: LogoDownloadPageProps) {
   const [isCopied, setIsCopied] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
@@ -76,8 +78,6 @@ export default function LogoDownloadPage({
     const slug = logo.metadata.url_path.split('/').pop()
     router.push(`/download/${slug}?format=png&size=${size}`)
   }
-
-  const relatedLogos = getRelatedLogos(logo, allLogos)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -166,9 +166,9 @@ export default function LogoDownloadPage({
             <div className="font-semibold mb-3">Tags</div>
             <div className="flex gap-2 flex-wrap">
               {logo.tags.map(tag => (
-                <Link
-                  key={tag}
-                  href={`/tag/${encodeURIComponent(tag)}`}
+                <Link 
+                  key={tag} 
+                  href={`/tag/${tag.replace(/ /g, '-')}`}
                   className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded-sm text-sm transition-colors"
                 >
                   {toTitleCase(tag)}

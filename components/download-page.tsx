@@ -3,13 +3,22 @@
 import { useEffect, useState, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function DownloadPageContent({ slug }: { slug: string }) {
+interface DownloadPageContentProps {
+  slug: string
+  logoTitle: string
+}
+
+export default function DownloadPageContent({ slug, logoTitle }: DownloadPageContentProps) {
   const [countdown, setCountdown] = useState(10)
   const [isDownloaded, setIsDownloaded] = useState(false)
   const searchParams = useSearchParams()
   const format = searchParams.get('format') || 'svg'
   const size = searchParams.get('size')
   const hasDownloaded = useRef(false)
+
+  const cleanTitle = logoTitle
+    .replace(/^Download /, '')
+    .replace(/ vector \(SVG\) logo$/, '')
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,7 +66,7 @@ export default function DownloadPageContent({ slug }: { slug: string }) {
           <div className="text-6xl mb-6">🎉</div>
           <h1 className="text-3xl font-bold mb-4">Your logo is on its way! ✨</h1>
           <p className="text-xl text-muted-foreground mb-2">
-            Thanks for using VectorLogoHub 💖
+            Thanks for using VectorLogoHub ☺️
           </p>
           <p className="text-lg text-muted-foreground">
             Have fun with your new logo! 🚀
@@ -81,7 +90,7 @@ export default function DownloadPageContent({ slug }: { slug: string }) {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-8">
-          Downloading your logo in {format.toUpperCase()} format
+          Downloading {cleanTitle} in {format.toUpperCase()} format
         </h1>
         <div className="relative w-32 h-32 mx-auto mb-8">
           <div className="absolute inset-0 border-4 border-secondary rounded-full" />
