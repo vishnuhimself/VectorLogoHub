@@ -1,42 +1,68 @@
-import { NextRequest, NextResponse } from 'next/server'
-import path from 'path'
-import fs from 'fs'
+import { NextResponse } from 'next/server'
+import { getLogoBySlug } from '@/lib/db'
 import sharp from 'sharp'
 
-export const dynamic = 'force-dynamic'
-
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { slug: string } }
 ) {
-  const searchParams = request.nextUrl.searchParams
-  const format = searchParams.get('format')
-  const size = searchParams.get('size')
-
   try {
-    const data = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), 'app/master_logo_details.json'), 'utf8')
-    )
+    const { searchParams } = new URL(request.url)
+    const format = searchParams.get('format') || 'svg'
+    const sizeParam = searchParams.get('size')
     
-    const logo = data.find((item: any) => 
-      item.metadata.url_path === `/logo/${params.slug}`
-    )
-    
+    console.log('Request params:', { 
+      format, 
+      sizeParam, 
+      url: request.url,
+      searchParams: Object.fromEntries(searchParams.entries())
+    })
+
+    const logo = await getLogoBySlug(params.slug)
     if (!logo) {
-      return new NextResponse('Logo not found', { status: 404 })
+      return new Response('Logo not found', { status: 404 })
     }
 
-    const logoUrl = logo.logo_url.replace(
-      'cdn.worldvectorlogo.com/logos',
-      'cdn.vectorlogohub.com'
-    )
-
-    const response = await fetch(logoUrl)
+    // Fetch the SVG from CDN
+    const response = await fetch(logo.logo_url)
+    if (!response.ok) {
+      throw new Error('Failed to fetch logo from CDN')
+    }
     const svgBuffer = await response.arrayBuffer()
 
     if (format === 'png') {
-      const pngSize = size ? parseInt(size) : 512
+      // Convert SVG to PNG with specified size
+      let pngSize: number
       
+      // First try to parse the size as a number
+      const parsedSize = parseInt(sizeParam || '')
+      if (!isNaN(parsedSize)) {
+        pngSize = parsedSize
+      } else {
+        // Fall back to predefined sizes if not a number
+        switch (sizeParam) {
+          case 'small':
+            pngSize = 128
+            break
+          case 'medium':
+            pngSize = 256
+            break
+          case 'large':
+          default:
+            pngSize = 512
+            break
+        }
+      }
+
+      // Cap the maximum size at 1024px
+      pngSize = Math.min(Math.max(pngSize, 32), 1024)
+
+      console.log('PNG conversion:', { 
+        sizeParam,
+        pngSize,
+        requestUrl: request.url 
+      })
+
       const pngBuffer = await sharp(Buffer.from(svgBuffer))
         .resize(pngSize, pngSize, {
           fit: 'contain',
@@ -45,22 +71,26 @@ export async function GET(
         .png()
         .toBuffer()
 
-      return new NextResponse(pngBuffer, {
+      return new Response(pngBuffer, {
         headers: {
           'Content-Type': 'image/png',
-          'Content-Disposition': `attachment; filename="${params.slug}-${pngSize}x${pngSize}.png"`,
+          'Content-Disposition': `attachment; filename="${params.slug}-${pngSize}.png"`,
+          'Cache-Control': 'public, max-age=31536000',
         },
       })
     }
 
-    return new NextResponse(Buffer.from(svgBuffer), {
+    // Handle SVG download
+    return new Response(Buffer.from(svgBuffer), {
       headers: {
         'Content-Type': 'image/svg+xml',
         'Content-Disposition': `attachment; filename="${params.slug}.svg"`,
+        'Cache-Control': 'public, max-age=31536000',
       },
     })
+
   } catch (error) {
     console.error('Download error:', error)
-    return new NextResponse('Error processing download', { status: 500 })
+    return new Response('Internal server error', { status: 500 })
   }
 } 
