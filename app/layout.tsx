@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { RootLayoutWrapper } from '@/components/layout/root-layout-wrapper'
+import GoogleAnalytics from '@/components/google-analytics'
 
 const beVietnamPro = Be_Vietnam_Pro({ 
   subsets: ['latin'],
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     siteName: 'VectorLogoHub',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/VectorLogoHub.png',
         width: 1200,
         height: 630,
       }
@@ -65,6 +66,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={beVietnamPro.variable}>
       <body suppressHydrationWarning={true} className="min-h-screen bg-background font-sans antialiased flex flex-col">
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
         <Header />
         <RootLayoutWrapper>
           {children}
