@@ -9,4 +9,6 @@ export interface LogoData {
   };
   downloads?: number;
   likes?: number;
+  about_brand?: string;
+  about_logo?: string;
 } 

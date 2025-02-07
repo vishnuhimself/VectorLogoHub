@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 
 const BASE_URL = 'https://vectorlogohub.com'
-const URLS_PER_SITEMAP = 20000
+const URLS_PER_SITEMAP = 5000
 
 export async function GET(
   request: Request,

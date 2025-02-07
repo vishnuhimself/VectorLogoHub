@@ -17,6 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ColorPalette } from '@/components/color-palette'
+import { AdditionalFormats } from '@/components/additional-formats'
 
 function extractLogoName(title: string): string {
   // Remove "Download " from start and " vector (SVG) logo" from end
@@ -80,101 +82,149 @@ export default function LogoDownloadPage({
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
       <h1 className="text-3xl font-bold mb-8 text-center">
         Download {logoName} Logo Vector [SVG & PNG]
       </h1>
       
-      <div className="bg-white border rounded-lg shadow">
-        {/* Logo Preview Section */}
-        <div className="p-4 sm:p-8 border-b">
-          <div className="relative w-full max-w-[384px] mx-auto aspect-square">
-            <Image
-              src={logo.logo_url}
-              alt={logo.logo_alt}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
+      {/* Top Grid Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+        {/* Main Logo Section - Takes 3 columns */}
+        <div className="lg:col-span-3">
+          <div className="bg-white border rounded-lg shadow">
+            {/* Logo Preview Section */}
+            <div className="p-4 sm:p-8 border-b">
+              <div className="relative w-full max-w-[384px] mx-auto aspect-square">
+                <Image
+                  src={logo.logo_url}
+                  alt={logo.logo_alt}
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
 
-        {/* Actions Section */}
-        <div className="p-8">
-          {/* Download Actions */}
-          <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4 mb-6">
-            <Button 
-              size="lg" 
-              className="text-lg py-6 active:scale-[0.98] transition-transform"
-              onClick={handleDownload}
-            >
-              <Download className="mr-2 h-5 w-5" />
-              <span>Download SVG</span>
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            {/* Actions Section */}
+            <div className="p-8">
+              {/* Download Actions */}
+              <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4 mb-6">
                 <Button 
-                  size="lg"
-                  variant="outline"
+                  size="lg" 
                   className="text-lg py-6 active:scale-[0.98] transition-transform"
+                  onClick={handleDownload}
                 >
                   <Download className="mr-2 h-5 w-5" />
-                  <span>Download PNG</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
+                  <span>Download SVG</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => handleDownloadPngSize(256)}>
-                  256 × 256
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDownloadPngSize(512)}>
-                  512 × 512
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDownloadPngSize(1024)}>
-                  1024 × 1024
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
 
-          {/* Secondary Actions */}
-          <div className="flex gap-4">
-            <Button 
-              variant="outline"
-              className="flex-1 active:scale-[0.98] transition-all"
-              onClick={handleCopyLink}
-            >
-              <LinkIcon className="mr-2 h-4 w-4" />
-              {isCopied ? 'Copied!' : 'Copy Link'}
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="flex-1 active:scale-[0.98] transition-all"
-              onClick={handleShare}
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              Share
-            </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      size="lg"
+                      variant="outline"
+                      className="text-lg py-6 active:scale-[0.98] transition-transform"
+                    >
+                      <Download className="mr-2 h-5 w-5" />
+                      <span>Download PNG</span>
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleDownloadPngSize(256)}>
+                      256 × 256
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownloadPngSize(512)}>
+                      512 × 512
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownloadPngSize(1024)}>
+                      1024 × 1024
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Secondary Actions */}
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline"
+                  className="flex-1 active:scale-[0.98] transition-all"
+                  onClick={handleCopyLink}
+                >
+                  <LinkIcon className="mr-2 h-4 w-4" />
+                  {isCopied ? 'Copied!' : 'Copy Link'}
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  className="flex-1 active:scale-[0.98] transition-all"
+                  onClick={handleShare}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share
+                </Button>
+              </div>
+            </div>
+
+            {/* Tags Section */}
+            {logo.tags.length > 0 && (
+              <div className="px-8 pb-8">
+                <div className="font-semibold mb-3">Tags</div>
+                <div className="flex gap-2 flex-wrap">
+                  {logo.tags.map(tag => (
+                    <Link 
+                      key={tag} 
+                      href={`/tag/${tag.replace(/ /g, '-')}`}
+                      className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded-sm text-sm transition-colors"
+                    >
+                      {toTitleCase(tag)}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Only show tags section if there are tags */}
-        {logo.tags.length > 0 && (
-          <div className="px-8 pb-8">
-            <div className="font-semibold mb-3">Tags</div>
-            <div className="flex gap-2 flex-wrap">
-              {logo.tags.map(tag => (
-                <Link 
-                  key={tag} 
-                  href={`/tag/${tag.replace(/ /g, '-')}`}
-                  className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded-sm text-sm transition-colors"
-                >
-                  {toTitleCase(tag)}
-                </Link>
-              ))}
-            </div>
+        {/* Right Column - Takes 2 columns */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Color Palette Section */}
+          <ColorPalette 
+            svgUrl={logo.logo_url} 
+            logoName={logoName}
+          />
+          
+          {/* Additional Formats Section */}
+          <AdditionalFormats 
+            svgUrl={logo.logo_url}
+            logoName={logoName}
+          />
+        </div>
+      </div>
+
+      {/* About Sections - Full Width */}
+      <div className="grid grid-cols-1 gap-8 mb-12">
+        {/* About Logo Section */}
+        {logo.about_logo && (
+          <div className="bg-white border rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              {logoName} Logo Design & History
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              {logo.about_logo}
+            </p>
+          </div>
+        )}
+
+        {/* About Brand Section */}
+        {logo.about_brand && (
+          <div className="bg-white border rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              The Story Behind {logoName}
+            </h2>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {logo.about_brand}
+            </p>
           </div>
         )}
       </div>

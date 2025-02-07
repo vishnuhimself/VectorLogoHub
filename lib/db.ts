@@ -12,7 +12,9 @@ function transformLogoData(logos: any[]): LogoData[] {
     tags: logo.tags?.map((t: any) => t.tag?.name).filter(Boolean) || [],
     metadata: {
       url_path: logo.url_path
-    }
+    },
+    about_brand: logo.about_brand,
+    about_logo: logo.about_logo
   }))
 }
 
@@ -84,7 +86,9 @@ export async function getLogoBySlug(slug: string): Promise<LogoData | null> {
         *,
         tags:logo_tags(
           tag:tags(name)
-        )
+        ),
+        about_brand,
+        about_logo
       `)
       .eq('url_path', `/logo/${slug}`)
       .single()
