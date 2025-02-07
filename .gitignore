@@ -45,3 +45,11 @@ venv/
 # Migration specific
 migration/data/
 migration/*.log
+
+#python
+*.py
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
